@@ -1,0 +1,27 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="My" GeneratedClassName="MySettings" UseMySettingsClassName="true">
+  <Profiles />
+  <Settings>
+    <Setting Name="SparePrinterName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">VWSPARE</Value>
+    </Setting>
+    <Setting Name="homeFolder" Type="System.String" Scope="User">
+      <Value Profile="(Default)">R:\Maintenance\352ShippingLabelMaker</Value>
+    </Setting>
+    <Setting Name="csvFile" Type="System.String" Scope="User">
+      <Value Profile="(Default)">\CSV\352VWmaster.csv</Value>
+    </Setting>
+    <Setting Name="labelType" Type="System.String" Scope="User">
+      <Value Profile="(Default)">VWINTERNAL</Value>
+    </Setting>
+    <Setting Name="partStyle" Type="System.String" Scope="User">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="cellName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">7830</Value>
+    </Setting>
+    <Setting Name="logFile" Type="System.String" Scope="User">
+      <Value Profile="(Default)">R:\VWDataCollection</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
