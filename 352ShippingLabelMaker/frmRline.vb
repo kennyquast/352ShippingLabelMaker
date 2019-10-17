@@ -1,7 +1,3 @@
-'Stuff to do still
-'future work : create an administraition screen that will allow reprint of barcode labels if needed and switch to 
-'different type of part
-'(Second printer at station? Or change labels out when needed??)
 Imports System.IO
 
 Public Class frmRline
@@ -20,6 +16,7 @@ Public Class frmRline
         Me.Location = New Point(0, 0)
         Me.Size = SystemInformation.PrimaryMonitorSize
         TxtLookup.Select() ' set the cursor in the text lookup field
+
     End Sub
 
     Private Sub TxtLookup_KeyDown(sender As Object, e As KeyEventArgs) Handles TxtLookup.KeyDown
@@ -64,13 +61,24 @@ Public Class frmRline
         'MsgBox(partNumber & " | " & partQty)
         LabelDate = Date.Now
         generateRlineLabel() 'pretty self explanitory, but goto the label printing method
+        'throw an error to the log file to track when a label was created
+        Try
+            Throw New Exception("R-Line Label Created")
+        Catch ex As Exception
+            LogError(ex)
+        End Try
         'MsgBox(data) ' used for testing - uncomment to bypass label print
         'Below Is to send data to printer comment out to bypass printer
-        Dim pd As New PrintDialog()
+        Try
+            Dim pd As New PrintDialog()
         RawPrinterHelper.SendStringToPrinter(pd.PrinterSettings.PrinterName, data) ' Print first label
         RawPrinterHelper.SendStringToPrinter(pd.PrinterSettings.PrinterName, data) ' Print Second label
-        RlineDataCollection() 'Collect Data and log it in spreadsheet
-        partCount = 0 ' reset part counter after max parts reached
+
+        Catch ex As Exception
+                LogError(ex)
+            End Try
+            RlineDataCollection() 'Collect Data and log it in spreadsheet
+            partCount = 0 ' reset part counter after max parts reached
         skidCount = skidCount + 1 'count up skids by 1 (even I can do this)
 
         lblSkidCount.Text = skidCount
@@ -107,22 +115,27 @@ Public Class frmRline
     End Sub
     Public Sub generateRlineLabel()
         'Simple way to load data from "text" file and fill in contents to be used for generating label 
-        'From existing IPL template
-        data = System.IO.File.ReadAllText(homeFolder & "\templates\" & labelType & ".lbl") ' reset the template
-        data = data.Replace("%Date%", Date.Now)
-        data = data.Replace("%PartNumber%", currentPart)
-        data = data.Replace("%Quantity%", TextBoxQty.Text)
-        data = data.Replace("%Series%", partSeries)
-        data = data.Replace("%Description%", partName)
-        data = data.Replace("%PartColour%", partColour)
-        data = data.Replace("%Cell%", cellName)
-        data = data.Replace("%Date%", Date.Now)
+        Try
 
+            'From existing IPL template
+            data = System.IO.File.ReadAllText(homeFolder & "\templates\" & labelType & ".lbl") ' reset the template
+            data = data.Replace("%Date%", Date.Now)
+            data = data.Replace("%PartNumber%", currentPart)
+            data = data.Replace("%Quantity%", TextBoxQty.Text)
+            data = data.Replace("%Series%", partSeries)
+            data = data.Replace("%Description%", partName)
+            data = data.Replace("%PartColour%", partColour)
+            data = data.Replace("%Cell%", cellName)
+            data = data.Replace("%Date%", Date.Now)
+        Catch ex As Exception
+            LogError(ex)
+        End Try
 
     End Sub
     Public Sub RlineDataCollection()
-        'Demonstrating Data Logging
-        Dim filePath As String = String.Format(logFile & "\{0}-{1}.csv", DateTime.Today.ToString("MMM-dd-yyyy"), cellName)
+        Try
+            'Demonstrating Data Logging
+            Dim filePath As String = String.Format(logFile & "\{0}-{1}.csv", DateTime.Today.ToString("MMM-dd-yyyy"), cellName)
 
         Dim fileExists As Boolean = File.Exists(filePath)
 
@@ -132,6 +145,10 @@ Public Class frmRline
             End If
             writer.WriteLine(cellName & "," & currentPart & "," & partName & " - " & partColour & "," & TextBoxQty.Text & "," & partSeries & "," & Date.Now)
         End Using
+
+        Catch ex As Exception
+                LogError(ex)
+            End Try
     End Sub
 
     Public Sub PartNotFound()
@@ -171,7 +188,7 @@ Public Class frmRline
 
         Else
             partCount = 1 ' reset part counter to 1 on new part scanned (mis-matched parts)
-            data = System.IO.File.ReadAllText(homeFolder & "\templates\" & labelType & ".lbl")
+            ' data = System.IO.File.ReadAllText(homeFolder & "\templates\" & labelType & ".lbl")
             skidCount = 0 ' reset the skid counter
             lblSkidCount.Text = skidCount ' reset the screen skid counter
 
@@ -199,32 +216,35 @@ Public Class frmRline
         'Method to scan through datagrid and select part row for usage.
         'may have to move some code to other areas eg: colour change code so we can use this
         'method for other areas of the program
+        Try
+            Dim rowindex As String
+            Dim found As Boolean = False
+            For Each row As DataGridViewRow In DataGridView1.Rows
+                'scan each row of the datagrid to match part scanned if found, load values into memory.
+                If row.Cells.Item("Column0").Value = TxtLookup.Text Then
+                    rowindex = row.Index.ToString()
+                    found = True
+                    partNumber = row.Cells("column0").Value.ToString()
+                    partKitNumber = row.Cells("column1").Value.ToString()
+                    partName = row.Cells("column2").Value.ToString()
+                    partColour = row.Cells("column3").Value.ToString()
+                    partQty = row.Cells("column4").Value.ToString() ' Temporarily grab the StdPack but this will be changed manually later
+                    partSeries = row.Cells("column5").Value.ToString()
 
-        Dim rowindex As String
-        Dim found As Boolean = False
-        For Each row As DataGridViewRow In DataGridView1.Rows
-            'scan each row of the datagrid to match part scanned if found, load values into memory.
-            If row.Cells.Item("Column0").Value = TxtLookup.Text Then
-                rowindex = row.Index.ToString()
-                found = True
-                partNumber = row.Cells("column0").Value.ToString()
-                partKitNumber = row.Cells("column1").Value.ToString()
-                partName = row.Cells("column2").Value.ToString()
-                partColour = row.Cells("column3").Value.ToString()
-                partQty = row.Cells("column4").Value.ToString() ' Temporarily grab the StdPack but this will be changed manually later
-                partSeries = row.Cells("column5").Value.ToString()
+                    Exit For
+                End If
 
-                Exit For
+            Next
+
+            If Not found Then
+
+                PartNotFound() ' goto not found routine
+                timerClearSearch.Enabled = True
+                Exit Sub
             End If
-
-        Next
-
-        If Not found Then
-
-            PartNotFound() ' goto not found routine
-            timerClearSearch.Enabled = True
-            Exit Sub
-        End If
+        Catch ex As Exception
+            LogError(ex)
+        End Try
 
         CountPart()
 
@@ -312,16 +332,21 @@ Public Class frmRline
         'Does that make sence? line 1 is index 0, Line 2 is Index 1 and so forth.
         'If you dont like the way indexes work invent a time machine and go back to invent the PC before anyone else does.
 
-        'TITANIUM BEIGE - (A1X)
-        'FORTANA RED - (B3Z)
-        'KURKUMA MET - (R1X)
-        'REFLEX SILVER - (A7W)
-        'PURE WHITE - (C9A)
-        'DEEP BLACK PEARL - (C9X)
-        'TOURMALINE BLUE - (P5Y)
-        'PLATINUM GRAY - (D7X)
-        'HUNTING BROWN - (A8U)
-        'PRIME - (GRU)
+        '00 - TITANIUM BEIGE - (A1X)
+        '01 - FORTANA RED - (B3Z)
+        '02 - KURKUMA MET - (R1X)
+        '03 - REFLEX SILVER - (A7W)
+        '04 - PURE WHITE - (C9A)
+        '05 - DEEP BLACK PEARL - (C9X)
+        '06 - TOURMALINE BLUE - (P5Y)
+        '07 - PLATINUM GRAY - (D7X)
+        '08 - HUNTING BROWN - (A8U)
+        '09 - PRIME - (GRU)
+        '10 - PLATINUM GRAY - (D7X)
+        '11 - PYRIT SILVER - (B7S)
+        '12 - PURE GREY - (H7J)
+        '13 - ONYX WHITE PEARL (OK1)
+
         Select Case CboColour.SelectedIndex
             Case 0
                 PartColourCode = "A1X"
@@ -343,6 +368,14 @@ Public Class frmRline
                 PartColourCode = "A8U"
             Case 9
                 PartColourCode = "GRU"
+            Case 10
+                PartColourCode = "P6W"
+            Case 11
+                PartColourCode = "B7S"
+            Case 12
+                PartColourCode = "H7J"
+            Case 13
+                PartColourCode = "OK1"
             Case Else
                 'MsgBox("Incorrect Part was Choosen. Please notify maintenance of this error.")
         End Select
@@ -351,5 +384,6 @@ Public Class frmRline
 
         TextBoxQty.Focus()
     End Sub
+
 End Class
 

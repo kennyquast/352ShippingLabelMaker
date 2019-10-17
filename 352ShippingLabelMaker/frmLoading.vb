@@ -7,15 +7,24 @@ Public Class frmLoading
 
 
     Private Sub frmLoading_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Try
+            Throw New Exception("Software was restarted")
 
+        Catch ex As Exception
+            LogError(ex)
+        End Try
         'lets do some cleanup on the updater files
         ' Check if the temporary backup file exists.
         If System.IO.File.Exists("~352ShippingLabelMakerUpdater.exe") = False Then
             'If Non-existant -> Do Nothing
         Else
-            'Delete the old updated renamed file IF it exists.
-            My.Computer.FileSystem.DeleteFile("~352ShippingLabelMakerUpdater.exe")
-        End If
+            Try
+                'Delete the old updated renamed file IF it exists. (this is no longer needed)
+                My.Computer.FileSystem.DeleteFile("~352ShippingLabelMakerUpdater.exe")
+            Catch ex As Exception
+                LogError(ex)
+                End Try
+            End If
 
 
         'MsgBox(homeFolder & csvFile)

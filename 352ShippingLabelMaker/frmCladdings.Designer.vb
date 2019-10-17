@@ -55,6 +55,7 @@ Partial Class frmCladdings
         Me.LblClock = New System.Windows.Forms.Label()
         Me.TmrClock = New System.Windows.Forms.Timer(Me.components)
         Me.Button2 = New System.Windows.Forms.Button()
+        Me.TimerScannerWait = New System.Windows.Forms.Timer(Me.components)
         Me.MenuStrip1.SuspendLayout()
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -341,6 +342,10 @@ Partial Class frmCladdings
         Me.Button2.Text = "SWITCH TO SERVICE CLADDINGS"
         Me.Button2.UseVisualStyleBackColor = True
         '
+        'TimerScannerWait
+        '
+        Me.TimerScannerWait.Interval = 91
+        '
         'frmCladdings
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -412,4 +417,5 @@ Partial Class frmCladdings
     Friend WithEvents LblClock As Label
     Friend WithEvents TmrClock As Timer
     Friend WithEvents Button2 As Button
+    Friend WithEvents TimerScannerWait As Timer
 End Class

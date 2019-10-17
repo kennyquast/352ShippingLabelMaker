@@ -4,6 +4,12 @@ Public Class frmNewPartScanned
     End Sub
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles BtnOK.Click
+        Try
+            Throw New Exception("User Clicked OK on a new part style")
+        Catch ex As Exception
+            LogError(ex)
+        End Try
+
         DialogResult = DialogResult.OK
         Me.Close()
 
@@ -26,7 +32,16 @@ Public Class frmNewPartScanned
     End Sub
 
     Private Sub BtnCancel_Click(sender As Object, e As EventArgs) Handles BtnCancel.Click
+        Try
+            Throw New Exception("User Clicked CANCEL on a new part style")
+        Catch ex As Exception
+            LogError(ex)
+        End Try
         DialogResult = DialogResult.Cancel
         Me.Close()
+    End Sub
+
+    Private Sub Label2_Click(sender As Object, e As EventArgs) Handles Label2.Click
+
     End Sub
 End Class

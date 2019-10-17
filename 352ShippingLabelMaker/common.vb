@@ -32,55 +32,60 @@ Module common
 
 
     Public Sub LoadDataGrid(ByRef TextFileTable)
-        'Load the CSV file to a workable datagridview which is hidden on screen because we do not need to view the data
-        'just need to access it
-        Dim TextFileReader As New Microsoft.VisualBasic.FileIO.TextFieldParser(homeFolder & csvFile)
-        'Dim TextFileTable As DataTable = Nothing
-        TextFileReader.TextFieldType = FileIO.FieldType.Delimited
-        TextFileReader.SetDelimiters(",")
+        Try
+            'Load the CSV file to a workable datagridview which is hidden on screen because we do not need to view the data
+            'just need to access it
+            Dim TextFileReader As New Microsoft.VisualBasic.FileIO.TextFieldParser(homeFolder & csvFile)
+            'Dim TextFileTable As DataTable = Nothing
+            TextFileReader.TextFieldType = FileIO.FieldType.Delimited
+            TextFileReader.SetDelimiters(",")
 
 
 
-        Dim Column As DataColumn
-        Dim Row As DataRow
-        Dim UpperBound As Int32
-        Dim ColumnCount As Int32
-        Dim CurrentRow As String()
+            Dim Column As DataColumn
+            Dim Row As DataRow
+            Dim UpperBound As Int32
+            Dim ColumnCount As Int32
+            Dim CurrentRow As String()
 
-        While Not TextFileReader.EndOfData
-            Try
-                CurrentRow = TextFileReader.ReadFields()
-                If Not CurrentRow Is Nothing Then
-                    ''# Check if DataTable has been created
-                    If TextFileTable Is Nothing Then
-                        TextFileTable = New DataTable("TextFileTable")
-                        ''# Get number of columns
-                        UpperBound = CurrentRow.GetUpperBound(0)
-                        ''# Create new DataTable
+            While Not TextFileReader.EndOfData
+                Try
+                    CurrentRow = TextFileReader.ReadFields()
+                    If Not CurrentRow Is Nothing Then
+                        ''# Check if DataTable has been created
+                        If TextFileTable Is Nothing Then
+                            TextFileTable = New DataTable("TextFileTable")
+                            ''# Get number of columns
+                            UpperBound = CurrentRow.GetUpperBound(0)
+                            ''# Create new DataTable
+                            For ColumnCount = 0 To UpperBound
+                                Column = New DataColumn()
+                                Column.DataType = System.Type.GetType("System.String")
+                                Column.ColumnName = "Column" & ColumnCount
+                                Column.Caption = "Column" & ColumnCount
+                                Column.ReadOnly = True
+                                Column.Unique = False
+                                TextFileTable.Columns.Add(Column)
+                            Next
+                        End If
+                        Row = TextFileTable.NewRow
                         For ColumnCount = 0 To UpperBound
-                            Column = New DataColumn()
-                            Column.DataType = System.Type.GetType("System.String")
-                            Column.ColumnName = "Column" & ColumnCount
-                            Column.Caption = "Column" & ColumnCount
-                            Column.ReadOnly = True
-                            Column.Unique = False
-                            TextFileTable.Columns.Add(Column)
+                            Row("Column" & ColumnCount) = CurrentRow(ColumnCount).ToString
                         Next
+                        TextFileTable.Rows.Add(Row)
                     End If
-                    Row = TextFileTable.NewRow
-                    For ColumnCount = 0 To UpperBound
-                        Row("Column" & ColumnCount) = CurrentRow(ColumnCount).ToString
-                    Next
-                    TextFileTable.Rows.Add(Row)
-                End If
-            Catch ex As _
-            Microsoft.VisualBasic.FileIO.MalformedLineException
-                MsgBox("Line " & ex.Message &
-                "is not valid and will be skipped.")
-            End Try
-        End While
-        TextFileReader.Dispose()
-        Return
+                Catch ex As _
+                Microsoft.VisualBasic.FileIO.MalformedLineException
+                    MsgBox("Line " & ex.Message &
+                    "is not valid and will be skipped.")
+                    LogError(ex)
+                End Try
+            End While
+            TextFileReader.Dispose()
+            Return
+        Catch ex As Exception
+            LogError(ex)
+        End Try
     End Sub
 
     Public Class RawPrinterHelper
@@ -138,37 +143,48 @@ Module common
         ' bytes, the function sends those bytes to the print queue.
         ' Returns True on success or False on failure.
         Public Shared Function SendBytesToPrinter(ByVal szPrinterName As String, ByVal pBytes As IntPtr, ByVal dwCount As Int32) As Boolean
+
             Dim hPrinter As IntPtr      ' The printer handle.
-            Dim dwError As Int32        ' Last error - in case there was trouble.
-            Dim di As DOCINFOW          ' Describes your document (name, port, data type).
-            Dim dwWritten As Int32      ' The number of bytes written by WritePrinter().
-            Dim bSuccess As Boolean     ' Your success code.
+                Dim dwError As Int32        ' Last error - in case there was trouble.
+                Dim di As DOCINFOW          ' Describes your document (name, port, data type).
+                Dim dwWritten As Int32      ' The number of bytes written by WritePrinter().
+                Dim bSuccess As Boolean     ' Your success code.
 
             ' Set up the DOCINFO structure.
-            With di
-                .pDocName = "My Visual Basic .NET RAW Document"
-                .pDataType = "RAW"
+            Try
+                With di
+                    .pDocName = "My Visual Basic .NET RAW Document"
+                    .pDataType = "RAW"
 
-            End With
+                End With
+            Catch ex As Exception
+                LogError(ex)
+            End Try
             ' Assume failure unless you specifically succeed.
-            bSuccess = False
-            If OpenPrinter(szPrinterName, hPrinter, 0) Then
-                If StartDocPrinter(hPrinter, 1, di) Then
-                    If StartPagePrinter(hPrinter) Then
-                        ' Write your printer-specific bytes to the printer.
-                        bSuccess = WritePrinter(hPrinter, pBytes, dwCount, dwWritten)
-                        EndPagePrinter(hPrinter)
+            Try
+                bSuccess = False
+                If OpenPrinter(szPrinterName, hPrinter, 0) Then
+                    If StartDocPrinter(hPrinter, 1, di) Then
+                        If StartPagePrinter(hPrinter) Then
+                            ' Write your printer-specific bytes to the printer.
+                            bSuccess = WritePrinter(hPrinter, pBytes, dwCount, dwWritten)
+                            EndPagePrinter(hPrinter)
+                        End If
+                        EndDocPrinter(hPrinter)
                     End If
-                    EndDocPrinter(hPrinter)
+                    ClosePrinter(hPrinter)
                 End If
-                ClosePrinter(hPrinter)
-            End If
+            Catch ex As Exception
+                LogError(ex)
+            End Try
             ' If you did not succeed, GetLastError may give more information
             ' about why not.
             If bSuccess = False Then
-                dwError = GetLastError()
-            End If
-            Return bSuccess
+                    dwError = GetLastError()
+                End If
+
+                Return bSuccess
+
         End Function ' SendBytesToPrinter()
 
         ' SendFileToPrinter()
@@ -204,48 +220,63 @@ Module common
 
         ' When the function is given a string and a printer name,
         ' the function sends the string to the printer as raw bytes.
+
         Public Shared Function SendStringToPrinter(ByVal szPrinterName As String, ByVal szString As String)
             Dim pBytes As IntPtr
             Dim dwCount As Int32
-            ' How many characters are in the string?
-            dwCount = szString.Length()
-            ' Assume that the printer is expecting ANSI text, and then convert
-            ' the string to ANSI text.
-            pBytes = Marshal.StringToCoTaskMemAnsi(szString)
-            ' Send the converted ANSI string to the printer.
-            SendBytesToPrinter(szPrinterName, pBytes, dwCount)
-            Marshal.FreeCoTaskMem(pBytes)
-            'added the following code to remove a build error, we dont need a return on anything to lets just return anything and see if it still prints. KQ Remove below line if errors whie printing arise
+            Try
+                ' How many characters are in the string?
+                dwCount = szString.Length()
+                ' Assume that the printer is expecting ANSI text, and then convert
+                ' the string to ANSI text.
+                pBytes = Marshal.StringToCoTaskMemAnsi(szString)
+                ' Send the converted ANSI string to the printer.
+                SendBytesToPrinter(szPrinterName, pBytes, dwCount)
+                Marshal.FreeCoTaskMem(pBytes)
+                'added the following code to remove a build error, we dont need a return on anything to lets just return anything and see if it still prints. KQ Remove below line if errors whie printing arise
+            Catch ex As Exception
+                LogError(ex)
+            End Try
             Return szString
+
         End Function
+
     End Class
     Public Sub generateLabel()
-        'Simple way to load data from "text" file and fill in contents to be used for generating label 
-        'From existing IPL template
-        data = System.IO.File.ReadAllText(homeFolder & "\templates\" & labelType & ".lbl") ' reset the template
-        data = data.Replace("%Date%", Date.Now)
-        data = data.Replace("%PartNumber%", currentPart)
-        data = data.Replace("%Quantity%", partQty)
-        data = data.Replace("%Series%", partSeries)
-        data = data.Replace("%Description%", partName)
-        data = data.Replace("%PartColour%", partColour)
-        data = data.Replace("%Cell%", cellName)
-        data = data.Replace("%Date%", Date.Now)
-
+        Try
+            'Simple way to load data from "text" file and fill in contents to be used for generating label 
+            'From existing IPL template
+            data = System.IO.File.ReadAllText(homeFolder & "\templates\" & labelType & ".lbl") ' reset the template
+            data = data.Replace("%Date%", Date.Now)
+            data = data.Replace("%PartNumber%", currentPart)
+            data = data.Replace("%Quantity%", partQty)
+            data = data.Replace("%Series%", partSeries)
+            data = data.Replace("%Description%", partName)
+            data = data.Replace("%PartColour%", partColour)
+            data = data.Replace("%Cell%", cellName)
+            data = data.Replace("%Date%", Date.Now)
+        Catch ex As Exception
+            LogError(ex)
+        End Try
 
     End Sub
     Public Sub DataCollection()
         'Demonstrating Data Logging
-        Dim filePath As String = String.Format(logFile & "\{0}-{1}.csv", DateTime.Today.ToString("MMM-dd-yyyy"), cellName)
+        Try
+            Dim filePath As String = String.Format(logFile & "\{0}-{1}.csv", DateTime.Today.ToString("MMM-dd-yyyy"), cellName)
 
         Dim fileExists As Boolean = File.Exists(filePath)
 
-        Using writer As New StreamWriter(filePath, True)
-            If Not fileExists Then
-                writer.WriteLine("Cell,Part Number,Description,Quantity,Series Level,Time Label created")
-            End If
-            writer.WriteLine(cellName & "," & currentPart & "," & partName & " - " & partColour & "," & partQty & "," & partSeries & "," & Date.Now)
-        End Using
+            Using writer As New StreamWriter(filePath, True)
+                If Not fileExists Then
+                    writer.WriteLine("Cell,Part Number,Description,Quantity,Series Level,Time Label created")
+                End If
+                writer.WriteLine(cellName & "," & currentPart & "," & partName & " - " & partColour & "," & partQty & "," & partSeries & "," & Date.Now)
+            End Using
+
+        Catch ex As Exception
+                LogError(ex)
+            End Try
     End Sub
     Public Sub OpenNewPartScannedWindow()
         frmNewPartScanned.ShowDialog()
@@ -256,5 +287,25 @@ Module common
         frmSamePartScanned.ShowDialog()
 
     End Sub
-
+    Public Sub LogError(ex As Exception)
+        Dim message As String = String.Format("Time: {0}", DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss tt"))
+        message += Environment.NewLine
+        message += "-----------------------------------------------------------"
+        message += Environment.NewLine
+        message += String.Format("Message: {0}", ex.Message)
+        message += Environment.NewLine
+        message += String.Format("StackTrace: {0}", ex.StackTrace)
+        message += Environment.NewLine
+        message += String.Format("Source: {0}", ex.Source)
+        message += Environment.NewLine
+        message += String.Format("TargetSite: {0}", ex.TargetSite.ToString())
+        message += Environment.NewLine
+        message += "-----------------------------------------------------------"
+        message += Environment.NewLine
+        Dim path As String = homeFolder & "\errors\" & cellName & "-" & Today.ToString("M-d-yyyy") & "-log.txt"
+        Using writer As New StreamWriter(path, True)
+            writer.WriteLine(message)
+            writer.Close()
+        End Using
+    End Sub
 End Module

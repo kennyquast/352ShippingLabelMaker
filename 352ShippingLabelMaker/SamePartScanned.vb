@@ -4,6 +4,11 @@
     End Sub
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles BtnOK.Click
+        Try
+            Throw New Exception("Same part scanned twice error window opened and User clicked OK to close")
+        Catch ex As Exception
+            LogError(ex)
+        End Try
         Me.Close()
 
     End Sub

@@ -10,10 +10,13 @@ Public Class frmArches
 
     'possibly need to add revision level for on the fly label reprints (or possibly add to WIP label)
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
-
-        LoadDataGrid(TextFileTable)
+        Try
+            LoadDataGrid(TextFileTable)
+        Catch ex As Exception
+            LogError(ex)
+        End Try
         Me.DataGridView1.DataSource = TextFileTable
-        Me.Show() 'show the form
+            Me.Show() 'show the form
         Me.FormBorderStyle = Windows.Forms.FormBorderStyle.None
         Me.Location = New Point(0, 0)
         Me.Size = SystemInformation.PrimaryMonitorSize
@@ -103,35 +106,37 @@ Public Class frmArches
     End Sub
 
     Public Sub CountPart()
+        Try
+            If prevPart = currentPart Then
+                partCount = partCount + 1 'count up by 1 (even I can do this)
 
-        If prevPart = currentPart Then
-            partCount = partCount + 1 'count up by 1 (even I can do this)
+            Else
+                partCount = 1 ' reset part counter to 1 on new part scanned (mis-matched parts)
+                'data = System.IO.File.ReadAllText(homeFolder & "\templates\" & labelType & ".lbl")
+                skidCount = 0 ' reset the skid counter
+                lblSkidCount.Text = skidCount ' reset the screen skid counter
 
-        Else
-            partCount = 1 ' reset part counter to 1 on new part scanned (mis-matched parts)
-            data = System.IO.File.ReadAllText(homeFolder & "\templates\" & labelType & ".lbl")
-            skidCount = 0 ' reset the skid counter
-            lblSkidCount.Text = skidCount ' reset the screen skid counter
+            End If
+            If partCount = partQty Then
+                LabelDate = Date.Now
+                generateLabel() 'pretty self explanitory, but goto the label printing method
+                'MsgBox(data) ' used for testing - uncomment to bypass label print
+                'Below Is to send data to printer comment out to bypass printer
+                Dim pd As New PrintDialog()
+                RawPrinterHelper.SendStringToPrinter(pd.PrinterSettings.PrinterName, data) ' Print first label
+                RawPrinterHelper.SendStringToPrinter(pd.PrinterSettings.PrinterName, data) ' Print Second label
+                DataCollection() 'Collect Data and log it in spreadsheet
+                partCount = 0 ' reset part counter after max parts reached
+                skidCount = skidCount + 1 'count up skids by 1 (even I can do this)
 
-        End If
-        If partCount = partQty Then
-            LabelDate = Date.Now
-            generateLabel() 'pretty self explanitory, but goto the label printing method
-            'MsgBox(data) ' used for testing - uncomment to bypass label print
-            'Below Is to send data to printer comment out to bypass printer
-            Dim pd As New PrintDialog()
-            RawPrinterHelper.SendStringToPrinter(pd.PrinterSettings.PrinterName, data) ' Print first label
-            RawPrinterHelper.SendStringToPrinter(pd.PrinterSettings.PrinterName, data) ' Print Second label
-            DataCollection() 'Collect Data and log it in spreadsheet
-            partCount = 0 ' reset part counter after max parts reached
-            skidCount = skidCount + 1 'count up skids by 1 (even I can do this)
-
-            lblSkidCount.Text = skidCount
+                lblSkidCount.Text = skidCount
 
 
 
-        End If
-
+            End If
+        Catch ex As Exception
+            LogError(ex)
+        End Try
     End Sub
     Public Sub getData()
         'Method to scan through datagrid and select part row for usage.
@@ -140,33 +145,35 @@ Public Class frmArches
         'borrow variables from claddings thats not used right now
         TempKitNumber2 = prevPart 'set the last part into holding
         prevPart = currentPart ' set the current part into holding
+        Try
+            Dim rowindex As String
+            Dim found As Boolean = False
+            For Each row As DataGridViewRow In DataGridView1.Rows
+                'scan each row of the datagrid to match part scanned if found, load values into memory.
+                If row.Cells.Item("Column0").Value = TxtLookup.Text Then
+                    rowindex = row.Index.ToString()
+                    found = True
+                    partNumber = row.Cells("column0").Value.ToString()
+                    partKitNumber = row.Cells("column1").Value.ToString()
+                    partName = row.Cells("column2").Value.ToString()
+                    partColour = row.Cells("column3").Value.ToString()
+                    partQty = row.Cells("column4").Value.ToString()
+                    partSeries = row.Cells("column5").Value.ToString()
 
-        Dim rowindex As String
-        Dim found As Boolean = False
-        For Each row As DataGridViewRow In DataGridView1.Rows
-            'scan each row of the datagrid to match part scanned if found, load values into memory.
-            If row.Cells.Item("Column0").Value = TxtLookup.Text Then
-                rowindex = row.Index.ToString()
-                found = True
-                partNumber = row.Cells("column0").Value.ToString()
-                partKitNumber = row.Cells("column1").Value.ToString()
-                partName = row.Cells("column2").Value.ToString()
-                partColour = row.Cells("column3").Value.ToString()
-                partQty = row.Cells("column4").Value.ToString()
-                partSeries = row.Cells("column5").Value.ToString()
+                    Exit For
+                End If
 
-                Exit For
+            Next
+
+            If Not found Then
+
+                PartNotFound() ' goto not found routine
+                'timerClearSearch.Enabled = True
+                Exit Sub
             End If
-
-        Next
-
-        If Not found Then
-
-            PartNotFound() ' goto not found routine
-            'timerClearSearch.Enabled = True
-            Exit Sub
-        End If
-
+        Catch ex As Exception
+            LogError(ex)
+        End Try
         'CountPart()
 
     End Sub

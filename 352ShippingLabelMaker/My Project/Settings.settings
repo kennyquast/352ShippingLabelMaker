@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="SparePrinterName" Type="System.String" Scope="User">
-      <Value Profile="(Default)">VWSPARE</Value>
+      <Value Profile="(Default)">DJ LH</Value>
     </Setting>
     <Setting Name="homeFolder" Type="System.String" Scope="User">
       <Value Profile="(Default)">R:\Maintenance\352ShippingLabelMaker</Value>
@@ -18,7 +18,7 @@
       <Value Profile="(Default)">2</Value>
     </Setting>
     <Setting Name="cellName" Type="System.String" Scope="User">
-      <Value Profile="(Default)">7830</Value>
+      <Value Profile="(Default)">TEST</Value>
     </Setting>
     <Setting Name="logFile" Type="System.String" Scope="User">
       <Value Profile="(Default)">R:\VWDataCollection</Value>
