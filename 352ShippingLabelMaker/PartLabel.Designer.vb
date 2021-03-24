@@ -38,6 +38,7 @@ Partial Class PartLabel
         Me.TxtLabelQty = New System.Windows.Forms.TextBox()
         Me.BtnService = New System.Windows.Forms.Button()
         Me.BtnKennySecret = New System.Windows.Forms.Button()
+        Me.LblMain = New System.Windows.Forms.Label()
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -173,12 +174,23 @@ Partial Class PartLabel
         Me.BtnKennySecret.UseVisualStyleBackColor = True
         Me.BtnKennySecret.Visible = False
         '
+        'LblMain
+        '
+        Me.LblMain.AutoSize = True
+        Me.LblMain.Font = New System.Drawing.Font("Microsoft Sans Serif", 20.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LblMain.Location = New System.Drawing.Point(50, 1)
+        Me.LblMain.Name = "LblMain"
+        Me.LblMain.Size = New System.Drawing.Size(316, 31)
+        Me.LblMain.TabIndex = 30
+        Me.LblMain.Text = "Scan or enter part below."
+        '
         'PartLabel
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.BtnCancel
         Me.ClientSize = New System.Drawing.Size(594, 433)
+        Me.Controls.Add(Me.LblMain)
         Me.Controls.Add(Me.BtnKennySecret)
         Me.Controls.Add(Me.BtnService)
         Me.Controls.Add(Me.TxtLabelQty)
@@ -218,4 +230,5 @@ Partial Class PartLabel
     Friend WithEvents TxtLabelQty As TextBox
     Friend WithEvents BtnService As Button
     Friend WithEvents BtnKennySecret As Button
+    Friend WithEvents LblMain As Label
 End Class

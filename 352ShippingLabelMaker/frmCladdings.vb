@@ -410,7 +410,7 @@ Public Class frmCladdings
 
 
 
-            data1 = System.IO.File.ReadAllText(homeFolder & "\templates\" & labelType & ".lbl") 'reset the template
+            data1 = System.IO.File.ReadAllText(homeFolder & "\templates\" & labelType & "-CLADDING.lbl") 'reset the template
 
             data1 = data1.Replace("%PartNumber%", partKitNumber1)
             data1 = data1.Replace("%Quantity%", partQty1)

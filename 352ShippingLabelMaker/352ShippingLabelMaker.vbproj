@@ -14,6 +14,7 @@
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <IsWebBootstrapper>false</IsWebBootstrapper>
+    <TargetFrameworkProfile />
     <PublishUrl>C:\Users\kquast\source\repos\352ShippingLabelMaker\352ShippingLabelMaker\publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -29,7 +30,6 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -181,6 +181,12 @@
     <Compile Include="PartLabel.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="RlineRelabel.Designer.vb">
+      <DependentUpon>RlineRelabel.vb</DependentUpon>
+    </Compile>
+    <Compile Include="RlineRelabel.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="SamePartScanned.Designer.vb">
       <DependentUpon>SamePartScanned.vb</DependentUpon>
     </Compile>
@@ -221,6 +227,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="PartLabel.resx">
       <DependentUpon>PartLabel.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RlineRelabel.resx">
+      <DependentUpon>RlineRelabel.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SamePartScanned.resx">
       <DependentUpon>SamePartScanned.vb</DependentUpon>

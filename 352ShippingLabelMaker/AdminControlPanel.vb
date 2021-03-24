@@ -50,6 +50,7 @@ Public Class FormAdminControlPanel
         ElseIf Application.OpenForms().OfType(Of frmRline).Any Then
 
             BtnReprintRline.Enabled = True
+            BtnRelabelRline.Enabled = True
 
         Else
             MsgBox("Error in Configuration, Check Cell Name setting.")
@@ -146,10 +147,6 @@ Public Class FormAdminControlPanel
         PartLabel.Show()
     End Sub
 
-    Private Sub LblInformation_Click(sender As Object, e As EventArgs) Handles LblInformation.Click
-
-    End Sub
-
     Private Sub BtnClose_Click(sender As Object, e As EventArgs) Handles BtnClose.Click
         Me.Close()
     End Sub
@@ -240,5 +237,9 @@ Public Class FormAdminControlPanel
 
 
         BtnAddUserSubmit.Visible = False
+    End Sub
+
+    Private Sub BtnRelabelRline_Click(sender As Object, e As EventArgs) Handles BtnRelabelRline.Click
+        RlineRelabel.Show()
     End Sub
 End Class
