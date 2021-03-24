@@ -41,6 +41,7 @@ Partial Class FormAdminControlPanel
         Me.LblUsername = New System.Windows.Forms.Label()
         Me.LblFullName = New System.Windows.Forms.Label()
         Me.BtnAddUserSubmit = New System.Windows.Forms.Button()
+        Me.BtnRelabelRline = New System.Windows.Forms.Button()
         CType(Me.AdminProductionGrid, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -69,9 +70,9 @@ Partial Class FormAdminControlPanel
         'BtnReprintArch
         '
         Me.BtnReprintArch.Enabled = False
-        Me.BtnReprintArch.Location = New System.Drawing.Point(676, 70)
+        Me.BtnReprintArch.Location = New System.Drawing.Point(650, 70)
         Me.BtnReprintArch.Name = "BtnReprintArch"
-        Me.BtnReprintArch.Size = New System.Drawing.Size(193, 52)
+        Me.BtnReprintArch.Size = New System.Drawing.Size(166, 52)
         Me.BtnReprintArch.TabIndex = 0
         Me.BtnReprintArch.Text = "Reprint Arch Label"
         Me.BtnReprintArch.UseVisualStyleBackColor = True
@@ -79,9 +80,9 @@ Partial Class FormAdminControlPanel
         'BtnReprintCladding
         '
         Me.BtnReprintCladding.Enabled = False
-        Me.BtnReprintCladding.Location = New System.Drawing.Point(676, 143)
+        Me.BtnReprintCladding.Location = New System.Drawing.Point(650, 143)
         Me.BtnReprintCladding.Name = "BtnReprintCladding"
-        Me.BtnReprintCladding.Size = New System.Drawing.Size(193, 52)
+        Me.BtnReprintCladding.Size = New System.Drawing.Size(166, 52)
         Me.BtnReprintCladding.TabIndex = 1
         Me.BtnReprintCladding.Text = "Reprint Claddings Label"
         Me.BtnReprintCladding.UseVisualStyleBackColor = True
@@ -101,7 +102,7 @@ Partial Class FormAdminControlPanel
         Me.BtnReprintRline.Enabled = False
         Me.BtnReprintRline.Location = New System.Drawing.Point(477, 70)
         Me.BtnReprintRline.Name = "BtnReprintRline"
-        Me.BtnReprintRline.Size = New System.Drawing.Size(193, 52)
+        Me.BtnReprintRline.Size = New System.Drawing.Size(166, 52)
         Me.BtnReprintRline.TabIndex = 6
         Me.BtnReprintRline.Text = "Reprint R-Line Label"
         Me.BtnReprintRline.UseVisualStyleBackColor = True
@@ -131,7 +132,7 @@ Partial Class FormAdminControlPanel
         '
         Me.BtnPartLabel.Location = New System.Drawing.Point(477, 143)
         Me.BtnPartLabel.Name = "BtnPartLabel"
-        Me.BtnPartLabel.Size = New System.Drawing.Size(193, 52)
+        Me.BtnPartLabel.Size = New System.Drawing.Size(166, 52)
         Me.BtnPartLabel.TabIndex = 9
         Me.BtnPartLabel.Text = "1x4 Part Label Print"
         Me.BtnPartLabel.UseVisualStyleBackColor = True
@@ -220,12 +221,23 @@ Partial Class FormAdminControlPanel
         Me.BtnAddUserSubmit.UseVisualStyleBackColor = True
         Me.BtnAddUserSubmit.Visible = False
         '
+        'BtnRelabelRline
+        '
+        Me.BtnRelabelRline.Enabled = False
+        Me.BtnRelabelRline.Location = New System.Drawing.Point(822, 70)
+        Me.BtnRelabelRline.Name = "BtnRelabelRline"
+        Me.BtnRelabelRline.Size = New System.Drawing.Size(166, 52)
+        Me.BtnRelabelRline.TabIndex = 19
+        Me.BtnRelabelRline.Text = "Relabel R-Line"
+        Me.BtnRelabelRline.UseVisualStyleBackColor = True
+        '
         'FormAdminControlPanel
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.BtnClose
         Me.ClientSize = New System.Drawing.Size(1065, 658)
+        Me.Controls.Add(Me.BtnRelabelRline)
         Me.Controls.Add(Me.BtnAddUserSubmit)
         Me.Controls.Add(Me.LblFullName)
         Me.Controls.Add(Me.LblUsername)
@@ -272,4 +284,5 @@ Partial Class FormAdminControlPanel
     Friend WithEvents LblUsername As Label
     Friend WithEvents LblFullName As Label
     Friend WithEvents BtnAddUserSubmit As Button
+    Friend WithEvents BtnRelabelRline As Button
 End Class

@@ -345,7 +345,8 @@ Public Class frmRline
         '10 - PLATINUM GRAY - (D7X)
         '11 - PYRIT SILVER - (B7S)
         '12 - PURE GREY - (H7J)
-        '13 - ONYX WHITE PEARL (OK1)
+        '13 - ORYX WHITE PEARL (OK1)
+        '14 - AURORA RED (0G3)
 
         Select Case CboColour.SelectedIndex
             Case 0
@@ -376,6 +377,8 @@ Public Class frmRline
                 PartColourCode = "H7J"
             Case 13
                 PartColourCode = "OK1"
+            Case 14
+                PartColourCode = "0G3"
             Case Else
                 'MsgBox("Incorrect Part was Choosen. Please notify maintenance of this error.")
         End Select

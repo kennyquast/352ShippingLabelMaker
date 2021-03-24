@@ -289,7 +289,7 @@ Partial Class frmRline
         Me.CboColour.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.CboColour.Font = New System.Drawing.Font("Microsoft Sans Serif", 20.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.CboColour.FormattingEnabled = True
-        Me.CboColour.Items.AddRange(New Object() {"TITANIUM BEIGE - (A1X)", "FORTANA RED - (B3Z)", "KURKUMA MET - (R1X)", "REFLEX SILVER - (A7W)", "PURE WHITE - (C9A)", "DEEP BLACK PEARL - (C9X)", "TOURMALINE BLUE - (P5Y)", "PLATINUM GRAY - (D7X)", "HUNTING BROWN - (A8U)", "PRIME - (GRU)", "RACING GREEN - (P6W )", "PYRIT SILVER - (B7S)", "PURE GREY - (H7J)", "ONYX WHITE PEARL (OK1)"})
+        Me.CboColour.Items.AddRange(New Object() {"TITANIUM BEIGE - (A1X)", "FORTANA RED - (B3Z)", "KURKUMA MET - (R1X)", "REFLEX SILVER - (A7W)", "PURE WHITE - (C9A)", "DEEP BLACK PEARL - (C9X)", "TOURMALINE BLUE - (P5Y)", "PLATINUM GRAY - (D7X)", "HUNTING BROWN - (A8U)", "PRIME - (GRU)", "RACING GREEN - (P6W )", "PYRIT SILVER - (B7S)", "PURE GREY - (H7J)", "ORYX WHITE PEARL (OK1)", "AURORA RED (0G3)"})
         Me.CboColour.Location = New System.Drawing.Point(18, 205)
         Me.CboColour.Name = "CboColour"
         Me.CboColour.Size = New System.Drawing.Size(450, 39)
