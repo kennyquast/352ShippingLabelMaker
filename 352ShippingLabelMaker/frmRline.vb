@@ -332,53 +332,48 @@ Public Class frmRline
         'Does that make sence? line 1 is index 0, Line 2 is Index 1 and so forth.
         'If you dont like the way indexes work invent a time machine and go back to invent the PC before anyone else does.
 
-        '00 - TITANIUM BEIGE - (A1X)
-        '01 - FORTANA RED - (B3Z)
-        '02 - KURKUMA MET - (R1X)
-        '03 - REFLEX SILVER - (A7W)
-        '04 - PURE WHITE - (C9A)
-        '05 - DEEP BLACK PEARL - (C9X)
-        '06 - TOURMALINE BLUE - (P5Y)
-        '07 - PLATINUM GRAY - (D7X)
-        '08 - HUNTING BROWN - (A8U)
-        '09 - PRIME - (GRU)
-        '10 - PLATINUM GRAY - (D7X)
-        '11 - PYRIT SILVER - (B7S)
-        '12 - PURE GREY - (H7J)
-        '13 - ORYX WHITE PEARL (OK1)
-        '14 - AURORA RED (0G3)
+
+        '00 - PURE WHITE - (C9A)
+        '01 - DEEP BLACK PEARL - (C9X)
+        '02 - TOURMALINE BLUE - (P5Y)
+        '03 - PLATINUM GRAY - (D7X)
+        '04 - PRIME - (GRU)
+        '05 - PYRIT SILVER - (B7S)
+        '06 - PURE GREY - (H7J)
+        '07 - ORYX WHITE PEARL (OK1)
+        '08 - AURORA RED (0G3)
 
         Select Case CboColour.SelectedIndex
             Case 0
-                PartColourCode = "A1X"
-            Case 1
-                PartColourCode = "B3Z"
-            Case 2
-                PartColourCode = "R1X"
-            Case 3
-                PartColourCode = "A7W"
-            Case 4
                 PartColourCode = "C9A"
-            Case 5
+            Case 1
                 PartColourCode = "C9X"
-            Case 6
+            Case 2
                 PartColourCode = "P5Y"
-            Case 7
+            Case 3
                 PartColourCode = "D7X"
-            Case 8
-                PartColourCode = "A8U"
-            Case 9
+            Case 4
                 PartColourCode = "GRU"
-            Case 10
-                PartColourCode = "P6W"
-            Case 11
+            Case 5
                 PartColourCode = "B7S"
-            Case 12
+            Case 6
                 PartColourCode = "H7J"
-            Case 13
+            Case 7
                 PartColourCode = "OK1"
-            Case 14
+            Case 8
                 PartColourCode = "0G3"
+                'Case 9
+                '    PartColourCode = "0G3"
+                'Case 10
+                '    PartColourCode = "P6W"
+                'Case 11
+                '    PartColourCode = "B7S"
+                'Case 12
+                '    PartColourCode = "H7J"
+                'Case 13
+                '    PartColourCode = "OK1"
+                'Case 14
+                '    PartColourCode = "0G3"
             Case Else
                 'MsgBox("Incorrect Part was Choosen. Please notify maintenance of this error.")
         End Select
