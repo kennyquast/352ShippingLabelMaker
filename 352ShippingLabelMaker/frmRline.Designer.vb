@@ -310,7 +310,7 @@ Partial Class frmRline
         Me.CboColour.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.CboColour.Font = New System.Drawing.Font("Microsoft Sans Serif", 20.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.CboColour.FormattingEnabled = True
-        Me.CboColour.Items.AddRange(New Object() {"PURE WHITE - (C9A)", "DEEP BLACK PEARL - (C9X)", "TOURMALINE BLUE - (P5Y)", "PLATINUM GRAY - (D7X)", "PRIME - (GRU)", "PYRIT SILVER - (B7S)", "PURE GREY - (H7J)", "ORYX WHITE PEARL (OK1)", "AURORA RED (0G3)"})
+        Me.CboColour.Items.AddRange(New Object() {"PURE WHITE - (C9A)", "DEEP BLACK PEARL - (C9X)", "TOURMALINE BLUE - (P5Y)", "PLATINUM GRAY - (D7X)", "PRIME - (GRU)", "PYRIT SILVER - (B7S)", "PURE GREY - (H7J)", "ORYX WHITE PEARL (OK1)", "AURORA RED (0G3)", "RACING GREEN (P6W)"})
         Me.CboColour.Location = New System.Drawing.Point(24, 252)
         Me.CboColour.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.CboColour.Name = "CboColour"

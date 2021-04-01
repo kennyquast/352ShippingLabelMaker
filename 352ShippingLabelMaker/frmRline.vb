@@ -342,6 +342,7 @@ Public Class frmRline
         '06 - PURE GREY - (H7J)
         '07 - ORYX WHITE PEARL (OK1)
         '08 - AURORA RED (0G3)
+        '09 - RACING GREEN (P6W)
 
         Select Case CboColour.SelectedIndex
             Case 0
@@ -362,8 +363,8 @@ Public Class frmRline
                 PartColourCode = "OK1"
             Case 8
                 PartColourCode = "0G3"
-                'Case 9
-                '    PartColourCode = "0G3"
+            Case 9
+                PartColourCode = "P6W"
                 'Case 10
                 '    PartColourCode = "P6W"
                 'Case 11
