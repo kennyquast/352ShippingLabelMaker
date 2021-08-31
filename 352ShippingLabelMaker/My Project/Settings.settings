@@ -15,7 +15,7 @@
       <Value Profile="(Default)">VWINTERNAL</Value>
     </Setting>
     <Setting Name="partStyle" Type="System.String" Scope="User">
-      <Value Profile="(Default)">3</Value>
+      <Value Profile="(Default)">2</Value>
     </Setting>
     <Setting Name="cellName" Type="System.String" Scope="User">
       <Value Profile="(Default)">TEST</Value>
