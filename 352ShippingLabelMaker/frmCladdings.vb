@@ -30,11 +30,6 @@ Public Class frmCladdings
     Public data1 As String = System.IO.File.ReadAllText(homeFolder & "\templates\" & labelType & "-CLADDING.lbl")
     'Public data2 As String = System.IO.File.ReadAllText(homeFolder & "\templates\" & labelType & "-CLADDING.lbl")
     Public TextFileTable As DataTable = Nothing
-    Public serialNumber1 As String
-    Public lastSerial1 As String
-    Public serialNumber2 As String
-    Public lastSerial2 As String
-
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
         Try
             LoadDataGrid(TextFileTable)
@@ -178,19 +173,13 @@ Public Class frmCladdings
             TempKitNumber2 = TempKitNumber
             TempKitNumber = partKitNumber1
             'MessageBox.Show("XxX PartKitNumber : " & partKitNumber1 & " | TempKitNumber : " & TempKitNumber & " | TempKitNumber2 : " & TempKitNumber2)
-            Dim str As String = txtLookup1.Text
-            Dim str2() As String = Split(str, ",")
-            lastSerial1 = serialNumber1 ' saves the last serial number temporarily so it cannot be scanned again next part.
-            serialNumber1 = str2(1)
-
-
 
 
             Dim rowindex As String = "0"
             Dim found As Boolean = False
             For Each row As DataGridViewRow In DataGridView1.Rows
                 'scan each row of the datagrid to match part scanned if found, load values into memory.
-                If row.Cells.Item("Column0").Value = str2(0) Then
+                If row.Cells.Item("Column0").Value = txtLookup1.Text Then
                     rowindex = row.Index.ToString()
                     found = True
                     CladdingNumber1 = row.Cells("column0").Value.ToString()
@@ -199,7 +188,7 @@ Public Class frmCladdings
                     partColour1 = row.Cells("column3").Value.ToString()
                     partQty1 = row.Cells("column4").Value.ToString()
                     partSeries1 = row.Cells("column5").Value.ToString()
-                    'MessageBox.Show(CladdingNumber1 + " | " + serialNumber1 + "Last Serial: " + lastSerial1)
+
                     Exit For
 
                 End If
@@ -228,17 +217,11 @@ Public Class frmCladdings
             'Method to scan through datagrid and select part row for usage.
             'may have to move some code to other areas eg: colour change code so we can use this
             'method for other areas of the program
-            '''' below is a trial to take the barcode scanned that may or nay not contain a comma deliminated serial number and split it to a usable part number and usable serial number
-            Dim str As String = txtLookup2.Text
-            Dim str2() As String = Split(str, ",")
-            lastSerial2 = serialNumber2 ' saves the last serial number temporarily so it cannot be scanned again next part.
-            serialNumber2 = str2(1)
-
             Dim rowindex As String
             Dim found As Boolean = False
             For Each row As DataGridViewRow In DataGridView1.Rows
                 'scan each row of the datagrid to match part scanned if found, load values into memory.
-                If row.Cells.Item("Column0").Value = str2(0) Then
+                If row.Cells.Item("Column0").Value = txtLookup2.Text Then
                     rowindex = row.Index.ToString()
                     found = True
                     CladdingNumber2 = row.Cells("column0").Value.ToString()
@@ -488,11 +471,6 @@ Public Class frmCladdings
         Me.Close()
     End Sub
 
-    Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
-        Dim str As String = txtLookup1.Text
-        Dim str2() As String = Split(str, ",")
-        MessageBox.Show(str2(0) + " | " + str2(1))
-    End Sub
 End Class
 
 
