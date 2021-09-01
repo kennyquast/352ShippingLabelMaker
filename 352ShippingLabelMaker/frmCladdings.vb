@@ -30,6 +30,11 @@ Public Class frmCladdings
     Public data1 As String = System.IO.File.ReadAllText(homeFolder & "\templates\" & labelType & "-CLADDING.lbl")
     'Public data2 As String = System.IO.File.ReadAllText(homeFolder & "\templates\" & labelType & "-CLADDING.lbl")
     Public TextFileTable As DataTable = Nothing
+    Public serial1 As String = "Initilize1"
+    Public serial2 As String = "Initilize2"
+    Public lastSerial1 As String
+    Public lastSerial2 As String
+
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
         Try
             LoadDataGrid(TextFileTable)
@@ -100,11 +105,11 @@ Public Class frmCladdings
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
 
         If txtLookup1.Text = "" Or txtLookup2.Text = "" Then
-            Try
-                Throw New Exception("Same part scanned twice : " & txtLookup1.Text & " & " & txtLookup2.Text)
-            Catch ex As Exception
-                LogError(ex)
-            End Try
+            'Try
+            '    Throw New Exception("Same part scanned twice : " & txtLookup1.Text & " & " & txtLookup2.Text)
+            'Catch ex As Exception
+            '    LogError(ex)
+            'End Try
             ' This is a crude error handling for the search box containing nothing. it will not seem to use
             'current errorhandling partNotFound() The chances of a user clicking enter is not common with a barcode 
             'scanner So I am not too worried about this popup showing
@@ -173,13 +178,20 @@ Public Class frmCladdings
             TempKitNumber2 = TempKitNumber
             TempKitNumber = partKitNumber1
             'MessageBox.Show("XxX PartKitNumber : " & partKitNumber1 & " | TempKitNumber : " & TempKitNumber & " | TempKitNumber2 : " & TempKitNumber2)
+            ''extract part number and serial from barcode.
+            Dim str As String = txtLookup1.Text
+            Dim str2() As String = Split(str, ",") ' split the barcode at the comma and create an array
+            'load the last serial number into memory so the same label cannot be scanned twice in a row.
+            lastSerial1 = serial1
+            serial1 = str2(1) ' set the seraial number from the barode / array
+            Dim part1 As String = str2(0)
 
 
             Dim rowindex As String = "0"
             Dim found As Boolean = False
             For Each row As DataGridViewRow In DataGridView1.Rows
                 'scan each row of the datagrid to match part scanned if found, load values into memory.
-                If row.Cells.Item("Column0").Value = txtLookup1.Text Then
+                If row.Cells.Item("Column0").Value = part1 Then
                     rowindex = row.Index.ToString()
                     found = True
                     CladdingNumber1 = row.Cells("column0").Value.ToString()
@@ -188,7 +200,7 @@ Public Class frmCladdings
                     partColour1 = row.Cells("column3").Value.ToString()
                     partQty1 = row.Cells("column4").Value.ToString()
                     partSeries1 = row.Cells("column5").Value.ToString()
-
+                    MessageBox.Show("|Part Number: " + str2(0) + "|Current Serial: " + serial1 + "|Last Serial Number: " + lastSerial1)
                     Exit For
 
                 End If
@@ -219,9 +231,16 @@ Public Class frmCladdings
             'method for other areas of the program
             Dim rowindex As String
             Dim found As Boolean = False
+            Dim str As String = txtLookup2.Text
+            Dim str2() As String = Split(str, ",") ' split the barcode at the comma and create an array
+            'load the last serial number into memory so the same label cannot be scanned twice in a row.
+            lastSerial2 = serial2
+            serial2 = str2(1) ' set the seraial number from the barode / array
+            Dim part2 As String = str2(0)
+
             For Each row As DataGridViewRow In DataGridView1.Rows
                 'scan each row of the datagrid to match part scanned if found, load values into memory.
-                If row.Cells.Item("Column0").Value = txtLookup2.Text Then
+                If row.Cells.Item("Column0").Value = part2 Then
                     rowindex = row.Index.ToString()
                     found = True
                     CladdingNumber2 = row.Cells("column0").Value.ToString()
@@ -230,6 +249,7 @@ Public Class frmCladdings
                     partColour2 = row.Cells("column3").Value.ToString()
                     partQty2 = row.Cells("column4").Value.ToString()
                     partSeries2 = row.Cells("column5").Value.ToString()
+                    MessageBox.Show("|Part Number: " + str2(0) + "|Current Serial: " + serial2 + "|Last Serial Number: " + lastSerial2)
                     Exit For
                 End If
 
@@ -394,10 +414,29 @@ Public Class frmCladdings
                 Catch ex As Exception
                     LogError(ex)
                 End Try
+
             End If
         Catch ex As Exception
             LogError(ex)
         End Try
+    End Sub
+    Public Sub validateSerial()
+        Try
+            If lastSerial1 = serial1 Then
+                MessageBox.Show("Serial # 1 matches")
+            Else
+                MessageBox.Show("Serial # 1 Does Not Match")
+
+            End If
+            If lastSerial2 = serial2 Then
+                MessageBox.Show("Serial # 2 matches")
+            Else
+                MessageBox.Show("Serial # 2 Does Not Match")
+            End If
+        Catch ex As Exception
+            LogError(ex)
+        End Try
+
     End Sub
     Public Sub generateCladdingLabel()
         Try
